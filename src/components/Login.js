@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Card, Form, Button, Alert } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContexts'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const Login = () => {
     const emailRef = useRef();
@@ -9,6 +9,8 @@ const Login = () => {
     const { login } = useAuth();
     const [error, setError] = useState(""); // Utilizado para emitir uma mensagem de erro
     const [loading, setLoading] = useState(false); // Utilizado para evitar que o usuário clique várias vezes no botão e cadastre vários usuários
+    const navigate = useNavigate();
+
 
     async function handleSubmit(e){
         e.preventDefault()
@@ -17,7 +19,9 @@ const Login = () => {
             setError("")
             setLoading(true);
             await login(emailRef.current.value, passwordRef.current.value)
+            navigate("/")
         } catch{
+            console.log(passwordRef.current.value)
             setError("Houve falha ao acessar a conta")
         }
         setLoading(false)
