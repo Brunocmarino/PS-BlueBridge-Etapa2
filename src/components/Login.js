@@ -3,27 +3,22 @@ import { Card, Form, Button, Alert } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContexts'
 import { Link } from "react-router-dom"
 
-const Signup = () => {
+const Login = () => {
     const emailRef = useRef();
     const passwordRef = useRef();
-    const passwordConfirmRef = useRef();
-    const { signup } = useAuth();
+    const { login } = useAuth();
     const [error, setError] = useState(""); // Utilizado para emitir uma mensagem de erro
     const [loading, setLoading] = useState(false); // Utilizado para evitar que o usuário clique várias vezes no botão e cadastre vários usuários
 
     async function handleSubmit(e){
         e.preventDefault()
-        //Validações antes de fazer o cadastro
-        if(passwordRef.current.value !== passwordConfirmRef.current.value){
-            return setError('As senha e a confirmação de senha são diferentes')
-        }
 
         try{
             setError("")
             setLoading(true);
-            await signup(emailRef.current.value, passwordRef.current.value)
+            await login(emailRef.current.value, passwordRef.current.value)
         } catch{
-            setError("Houve falha ao cadastrar uma conta")
+            setError("Houve falha ao acessar a conta")
         }
         setLoading(false)
     }
@@ -33,37 +28,32 @@ const Signup = () => {
         <Card>
             <Card.Body>
                 <h2 className="text-center mb-4">
-                    Cadastro 
+                    Log In 
                 </h2>
                 {/*Adiciona Erro, caso algo dê errado*/}
                 {error && <Alert variant="danger"> {error} </Alert>}
                 <Form onSubmit={handleSubmit}>
                     <Form.Group id="email">
                         <Form.Label className="mt-2"> Email </Form.Label>
-                        <Form.Control type="email" ref={emailRef}required />
+                        <Form.Control type="email" ref={emailRef} required />
                     </Form.Group>
 
                     <Form.Group id="password">
                         <Form.Label className="mt-2"> Senha </Form.Label>
-                        <Form.Control type="password" ref={passwordRef}required />
-                    </Form.Group>
-
-                    <Form.Group id="password-confirm">
-                        <Form.Label className="mt-2"> Confirmação de Senha </Form.Label>
-                        <Form.Control type="password" ref={passwordConfirmRef}required />
+                        <Form.Control type="password" ref={passwordRef} required />
                     </Form.Group>
 
                     <Button disabled={loading} className="w-100 mt-3" type="submit">
-                        Cadastrar
+                        Entrar
                     </Button>
 
                 </Form>
             </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
-            Já possui uma conta? <Link to="/Login">Acessar</Link>
+            Não possui cadastro? <Link to="/Signup">Cadastrar</Link>
         </div>
     </> 
     );
 }
-export default Signup;
+export default Login;

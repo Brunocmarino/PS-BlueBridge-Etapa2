@@ -10,10 +10,11 @@ export function useAuth(){
 
 export function AuthProvider({ children }){
     const[currentUser,setCurrentUser] = useState();
-
+    const [loading, setLoading] = useState(true); // Aguarda a verificação se há algum usuário logado
     useEffect(()=>{
         const unsubscribe = auth.onAuthStateChanged( user =>{
             setCurrentUser(user);
+            setLoading(false)
         })
         return unsubscribe;
     },[])
@@ -21,14 +22,20 @@ export function AuthProvider({ children }){
     function signup(email,password){
         return auth.createUserWithEmailAndPassword(email, password);
     }
+
+    function login(email, password){
+        return auth.signInWithEmailAndPassword(email, password);
+    }
+
     const value = {
         currentUser,
-        signup
+        signup,
+        login
     }
 
     return(
         <AuthContext.Provider value={value}>
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     )
 }
